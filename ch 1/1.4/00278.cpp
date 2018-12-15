@@ -1,41 +1,46 @@
 #define _CRT_SECURE_NO_WARNINGS 
 
-#include <stdio.h>
 #include <iostream>
+#include <string>
 #include <algorithm>
+#include <memory.h>
 
 using namespace std;
 
-#define NUM_LENGTH 8
 
 int main(int argc, char** argv)
 {
-	//std::ios::sync_with_stdio(false);
 #ifdef _WIN32
 	freopen("Text.txt", "r", stdin);
 #endif
-	int tc, T, M,N;
+
+	int TC;
+	cin >> TC;
+
 	char c;
-	cin >> T;
+	int y, x;
 
-	for (int tc = 1; tc <= T; tc++)
+	while (TC--)
 	{
-		cin >> c >> M >> N;
+		cin >> c >> y >> x;
 
-		if (c == 'r' || c == 'Q')
+		if (c == 'r')
 		{
-			cout << min(M, N) << '\n';
+			cout << min(y, x) << '\n';
 		}
-		else if(c == 'K')
+		else if (c == 'k')
 		{
-			cout << ((M + 1) / 2) * ((N + 1) / 2) << '\n';
+			cout << ((y + 1) / 2) * ((x + 1) / 2)  + (y / 2) * (x / 2) << '\n';
 		}
-		else
+		else if (c == 'Q')
 		{
-			cout << ((M + 1) / 2) * ((N + 1) / 2)  + (M/2) * (N/2) << '\n';
+			cout << min(y, x) << '\n';
+		}
+		else//K
+		{
+			cout << ((y + 1) / 2) * ((x + 1) / 2) << '\n';
 		}
 	}
-	
 
 	return 0;
 }
