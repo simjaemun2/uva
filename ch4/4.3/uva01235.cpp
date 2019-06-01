@@ -1,9 +1,8 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS 
 
 
 #include <stdio.h>
 #include <iostream>
-
 #include <memory.h>
 #include <algorithm>
 #include <vector>
@@ -40,7 +39,7 @@ int DY[] = { -1,0,1,0,-1,-1,1,1 };
 int DX[] = { 0,-1,0,1,-1,1,-1,1 };
 
 const int MAX_N = 1000000;
-int N,M;
+int N, M,K;
 
 int parent[MAX_N + 1];
 int weight[MAX_N + 1];
@@ -86,50 +85,79 @@ void merge(int u, int v)
 	}
 }
 
+int getRolls(string a, string b)
+{
+	int sum = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		int d = abs(a[i] - b[i]);
+		sum += d > 5 ? 10 - d : d;
+	}
+
+	return sum;
+}
+
 int main(int argc, char** argv)
 {
 #ifdef _WIN32
 	freopen("Text.txt", "r", stdin);
 #endif
+	
+	cin >> TC;
 
-	for(cin >> N)
+	for (tc = 1; tc <= TC; tc++)
 	{
-		vector<pair<double, double> > v(N);
-		vector<pair<double, pair<int, int> > > edges;
+		/*
+		if (tc != 1)
+			cout << '\n';
+		*/
+		cin >> N;
 
-		for (int n = 0; n < N; n++)
+		for (int n = 1; n <= N; n++)
 		{
-			cin >> v[n].first >> v[n].second;
-
 			parent[n] = n;
 			weight[n] = 1;
-
-
-			for (int i = 0; i < n; i++)
-			{
-				edges.push_back({hypot(v[n].first - v[i].first, v[n].second- v[i].second),
-					{n,i} });
-			}
 		}
+
+		vector<pair<int, pair<int, int> > > edges;
+		vector<string> vertices(N + 1);
+
+		int sum = 9999;
+
+		for (int i = 1; i <= N; i++)
+		{
+			cin >> vertices[i];
+
+			for (int j = 1; j < i; j++)
+			{
+				int d = getRolls(vertices[i], vertices[j]);
+				edges.push_back({ d, {i, j} });
+			}
+
+			sum = min(sum, getRolls(vertices[i], "0000"));
+		}
+
 
 		sort(edges.begin(), edges.end());
 
-		double sum = 0.0;
+		//cout << "Case " << tc << ":\n";
 
-		for (auto p : edges)
+		for (auto edge : edges)
 		{
-			double d = p.first;
-			int u = p.second.first;
-			int v = p.second.second;
+			int c = edge.first;
+			int a = edge.second.first;
+			int b = edge.second.second;
 
-			if (!isSameSet(u, v))
+			if (!isSameSet(a, b))
 			{
-				sum += d;
-				merge(u, v);
+				merge(a, b);
+
+				sum += c;
 			}
 		}
 
-		printf("%.2f\n", sum);
+		cout << sum << '\n';
 	}
 
 	return 0;
