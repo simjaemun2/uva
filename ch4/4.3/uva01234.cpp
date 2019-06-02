@@ -93,40 +93,50 @@ int main(int argc, char** argv)
 	freopen("Text1.txt", "r", stdin);
 #endif
 
-	int A, B;
-	int answer = 0;
-
-	for (int n = 0; n <= 100000; n++)
+	cin >> TC;
+	for (tc = 1; tc <= TC; tc++)
 	{
-		parent[n] = n;
-		weight[n] = 1;
-	}
+		cin >> N >> M;
 
-	while (cin >> A)
-	{
-		if (A == -1)
+		vector<pair<int, PII > > edges;
+
+		for (int n = 1; n <= N; n++)
 		{
-			cout << answer << '\n';
-			answer = 0;
-			for (int n = 0; n <= 100000; n++)
+			parent[n] = n;
+			weight[n] = 1;
+		}
+
+		int sum = 0;
+
+		for (int m = 0; m < M; m++)
+		{
+			int u, v, d;
+
+			cin >> u >> v >> d;
+
+			sum += d;
+
+			edges.push_back({ -d, {u,v} });
+		}
+
+		sort(edges.begin(), edges.end());
+
+		for (auto p : edges)
+		{
+			int d = p.first;
+			int u = p.second.first;
+			int v = p.second.second;
+
+			if (!isSameSet(u, v))
 			{
-				parent[n] = n;
-				weight[n] = 1;
+				merge(u, v);
+				sum += d;
 			}
 		}
-		else
-		{
-			cin >> B;
 
-			if (isSameSet(A, B))
-			{
-				answer++;
-			}
-			else
-			{
-				merge(A, B);
-			}
-		}
+		cout << sum << '\n';
 	}
+
+
 	return 0;
 }

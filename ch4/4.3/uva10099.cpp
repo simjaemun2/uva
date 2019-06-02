@@ -93,40 +93,56 @@ int main(int argc, char** argv)
 	freopen("Text1.txt", "r", stdin);
 #endif
 
-	int A, B;
-	int answer = 0;
-
-	for (int n = 0; n <= 100000; n++)
+	//cin >> TC;
+	//for (tc = 1; tc <= TC; tc++)
+	tc = 1;
+	while(cin >> N >> M, N|M)
 	{
-		parent[n] = n;
-		weight[n] = 1;
-	}
+		vector<pair<int, PII > > edges;
 
-	while (cin >> A)
-	{
-		if (A == -1)
+		for (int n = 1; n <= N; n++)
 		{
-			cout << answer << '\n';
-			answer = 0;
-			for (int n = 0; n <= 100000; n++)
+			parent[n] = n;
+			weight[n] = 1;
+		}
+
+		for (int m = 0; m < M; m++)
+		{
+			int u, v, d;
+
+			cin >> u >> v >> d;
+
+			edges.push_back({ -d + 1, {u,v} });
+		}
+
+		sort(edges.begin(), edges.end());
+
+		int sc, dc, nt;
+		int minT;
+		cin >> sc >> dc >> nt;
+
+		for (auto p : edges)
+		{
+			int d = p.first;
+			int u = p.second.first;
+			int v = p.second.second;
+
+			if (!isSameSet(u, v))
 			{
-				parent[n] = n;
-				weight[n] = 1;
+				merge(u, v);
+				minT = -d;
+			}
+
+			if (isSameSet(sc, dc))
+			{
+				break;
 			}
 		}
-		else
-		{
-			cin >> B;
 
-			if (isSameSet(A, B))
-			{
-				answer++;
-			}
-			else
-			{
-				merge(A, B);
-			}
-		}
+		cout << "Scenario #" << tc++ << "\nMinimum Number of Trips = ";
+		cout << (int)(ceil((double)nt / minT)) << "\n\n";
 	}
+
+
 	return 0;
 }
